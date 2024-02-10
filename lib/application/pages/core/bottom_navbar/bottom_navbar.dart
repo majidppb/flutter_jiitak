@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/colors.dart';
 import '../../details_page/details_page.dart';
 import '../../home/home.dart';
 import '../../second_page/second_page.dart';
+import 'getx/controller.dart';
 
-int _index = 0;
-
-class BottomNavbar extends StatelessWidget {
-  const BottomNavbar({super.key, required this.child});
-
-  final Widget child;
+class BottomNavbar extends GetView<NavBarController> {
+  const BottomNavbar({super.key});
 
   final _itemsBotNav = const [
     BottomNavigationBarItem(icon: Icon(Icons.search), label: 'さがす'),
@@ -41,86 +39,75 @@ class BottomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: (MediaQuery.of(context).size.aspectRatio <= 1.1)
-          ? child
-          : Row(
-              children: [
-                NavigationRail(
-                  indicatorColor: AppColors.amber,
-                  selectedIndex: _index,
-                  onDestinationSelected: (index) {
-                    _index = index;
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              BottomNavbar(child: _pages.children[_index])),
-                    );
-                  },
-                  labelType: NavigationRailLabelType.all,
-                  destinations: _itemsRail,
+    Get.put(NavBarController());
+    return Obx(
+      () => Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: (MediaQuery.of(context).size.aspectRatio <= 1.1)
+            ? _pages.children[controller.index.value]
+            : Row(
+                children: [
+                  NavigationRail(
+                    indicatorColor: AppColors.amber,
+                    selectedIndex: controller.index.value,
+                    onDestinationSelected: (index) {
+                      controller.index.value = index;
+                    },
+                    labelType: NavigationRailLabelType.all,
+                    destinations: _itemsRail,
+                  ),
+                  Expanded(child: _pages.children[controller.index.value]),
+                ],
+              ),
+        bottomNavigationBar: Builder(
+          builder: (context) {
+            if (MediaQuery.of(context).size.aspectRatio <= 1.1) {
+              return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: AppColors.amber,
+                unselectedItemColor: Colors.black87,
+                showUnselectedLabels: true,
+                unselectedLabelStyle: const TextStyle(color: AppColors.white),
+                selectedLabelStyle: const TextStyle(color: AppColors.white),
+                currentIndex: controller.index.value,
+                onTap: (value) {
+                  controller.index.value = value;
+                },
+                items: _itemsBotNav,
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Builder(builder: (context) {
+          final isPortrait = MediaQuery.of(context).size.aspectRatio <= 1.1;
+          if (isPortrait) {
+            return FloatingActionButton(
+              heroTag: 'QR',
+              shape: const CircleBorder(),
+              onPressed: () => controller.index.value = 2,
+              child: Container(
+                width: 65,
+                height: 65,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 245, 169, 26),
+                      Color.fromARGB(255, 244, 209, 144),
+                    ],
+                  ),
                 ),
-                Expanded(child: _pages.children[_index]),
-              ],
-            ),
-      bottomNavigationBar: Builder(
-        builder: (context) {
-          if (MediaQuery.of(context).size.aspectRatio <= 1.1) {
-            return BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: AppColors.amber,
-              unselectedItemColor: Colors.black87,
-              showUnselectedLabels: true,
-              unselectedLabelStyle: const TextStyle(color: AppColors.white),
-              selectedLabelStyle: const TextStyle(color: AppColors.white),
-              currentIndex: _index,
-              onTap: (value) {
-                _index = value;
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          BottomNavbar(child: _pages.children[_index])),
-                );
-              },
-              items: _itemsBotNav,
+                child: const Icon(Icons.qr_code_rounded),
+              ),
             );
           } else {
             return const SizedBox();
           }
-        },
+        }),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Builder(builder: (context) {
-        final isPortrait = MediaQuery.of(context).size.aspectRatio <= 1.1;
-        if (isPortrait) {
-          return FloatingActionButton(
-            heroTag: 'QR',
-            shape: const CircleBorder(),
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      BottomNavbar(child: _pages.children[2])),
-            ),
-            child: Container(
-              width: 65,
-              height: 65,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromARGB(255, 245, 169, 26),
-                    Color.fromARGB(255, 244, 209, 144),
-                  ],
-                ),
-              ),
-              child: const Icon(Icons.qr_code_rounded),
-            ),
-          );
-        } else {
-          return const SizedBox();
-        }
-      }),
     );
   }
 }

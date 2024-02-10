@@ -27,10 +27,14 @@ class HomeListSection extends StatelessWidget {
       return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 500,
           childAspectRatio: 330 / 410,
         ),
+        // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        //   crossAxisCount: 2,
+        //   childAspectRatio: 330 / 410,
+        // ),
         itemCount: items.length,
         itemBuilder: (context, index) => _HomeCardWidget(
           onLike: onLike,

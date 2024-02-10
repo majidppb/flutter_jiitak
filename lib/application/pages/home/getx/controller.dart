@@ -5,7 +5,7 @@ import '../../../../domain/entities/home_item.dart';
 
 class HomePageController extends GetxController {
   final items = List.generate(
-    4,
+    8,
     (index) => HomeItem(
       id: index.toString(),
       isLiked: false,

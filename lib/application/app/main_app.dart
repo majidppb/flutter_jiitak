@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../pages/core/bottom_navbar/bottom_navbar.dart';
-import '../pages/home/home.dart';
 import 'theme.dart' as theme;
 
 class MainApp extends StatelessWidget {
@@ -13,7 +12,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       theme: theme.light,
-      home: const BottomNavbar(child: HomePage()),
+      home: const BottomNavbar(),
     );
   }
 }
