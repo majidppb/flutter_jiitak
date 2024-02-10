@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../../domain/entities/home_item.dart';
 import '../../core/colors.dart';
+import 'getx/controller.dart';
 import 'widgets/home_app_bar_bottom_banner.dart';
 import 'widgets/home_calender_list.dart';
 import 'widgets/home_list.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends GetView<HomePageController> {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(HomePageController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.homeBg,
@@ -69,25 +71,10 @@ class HomePage extends StatelessWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            HomeCalederListWidget(selectedDay: DateTime.now()),
+            HomeCalederListWidget(selectedDay: controller.selectedDay),
             HomeListSection(
-              // TODO list through state mangement
-              items: List.generate(
-                4,
-                (index) => HomeItem(
-                  isLiked: false,
-                  image:
-                      'https://static.wixstatic.com/media/11062b_e757d8e301a94451992764f76c8cf906~mv2.jpeg/v1/fill/w_1000,h_667,al_c,q_85,usm_0.66_1.00_0.01/11062b_e757d8e301a94451992764f76c8cf906~mv2.jpeg',
-                  title: '介護有料老人ホームひまわり倶楽部の介護職／ヘルパー求人（パート／バイト）',
-                  text1: '5月 31日（水）08 : 00 ~ 17 : 00',
-                  text2: '北海道札幌市東雲町3丁目916番地17号',
-                  text3: '交通費 300円',
-                  text4: '住宅型有料老人ホームひまわり倶楽部',
-                  badge1: '介護付き有料老人ホーム',
-                  badge2: '本日まで',
-                  amount: 6000,
-                ),
-              ),
+              items: controller.items,
+              onLike: controller.like,
             ),
             const SizedBox(height: 80),
           ],

@@ -8,7 +8,7 @@ import '../../second_page/second_page.dart';
 int _index = 0;
 
 class BottomNavbar extends StatelessWidget {
-  BottomNavbar({super.key, required this.child});
+  const BottomNavbar({super.key, required this.child});
 
   final Widget child;
 
@@ -29,12 +29,12 @@ class BottomNavbar extends StatelessWidget {
     NavigationRailDestination(icon: Icon(Icons.person), label: Text('マイページ'))
   ];
 
-  final _pages = IndexedStack(
+  final _pages = const IndexedStack(
     children: [
-      const HomePage(),
-      const SecondPage(),
-      const Scaffold(body: Center(child: Text('QR PAGE'))),
-      const Scaffold(body: Center(child: Text('MESSAGES PAGE'))),
+      HomePage(),
+      SecondPage(),
+      Scaffold(body: Center(child: Text('QR PAGE'))),
+      Scaffold(body: Center(child: Text('MESSAGES PAGE'))),
       DetailsPage(),
     ],
   );

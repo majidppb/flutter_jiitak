@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       theme: theme.light,
-      home: BottomNavbar(child: const HomePage()),
+      home: const BottomNavbar(child: HomePage()),
     );
   }
 }

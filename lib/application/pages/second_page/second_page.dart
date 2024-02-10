@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../core/colors.dart';
+import 'getx/controller.dart';
 import 'widgets/card_section.dart';
 import 'widgets/list_section.dart';
 
-class SecondPage extends StatelessWidget {
+class SecondPage extends GetView<SecondPageController> {
   const SecondPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(SecondPageController());
+
     return Scaffold(
       backgroundColor: AppColors.secondPageBg,
       appBar: AppBar(

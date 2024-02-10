@@ -4,9 +4,10 @@ import '../../../../domain/entities/home_item.dart';
 import '../../../core/colors.dart';
 
 class HomeListSection extends StatelessWidget {
-  const HomeListSection({super.key, required this.items});
+  const HomeListSection({super.key, required this.items, required this.onLike});
 
   final List<HomeItem> items;
+  final void Function(String id) onLike;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class HomeListSection extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) => _HomeCardWidget(
+          onLike: onLike,
           item: items[index],
           size: const Size(300, 410),
         ),
@@ -31,6 +33,7 @@ class HomeListSection extends StatelessWidget {
         ),
         itemCount: items.length,
         itemBuilder: (context, index) => _HomeCardWidget(
+          onLike: onLike,
           item: items[index],
           size: const Size(300, 410),
         ),
@@ -40,9 +43,11 @@ class HomeListSection extends StatelessWidget {
 }
 
 class _HomeCardWidget extends StatelessWidget {
-  const _HomeCardWidget({required this.item, required this.size});
+  const _HomeCardWidget(
+      {required this.item, required this.size, required this.onLike});
 
   final HomeItem item;
+  final void Function(String id) onLike;
   final Size size;
 
   @override
@@ -133,13 +138,9 @@ class _HomeCardWidget extends StatelessWidget {
               Row(
                 children: [
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite_border_rounded,
-                      color: AppColors.grey,
-                      size: 30,
-                    ),
+                  _LikeButton(
+                    isLiked: item.isLiked,
+                    onLike: () => onLike(item.id),
                   ),
                   const SizedBox(width: 10),
                 ],
@@ -179,6 +180,49 @@ class _BadgeWidget extends StatelessWidget {
           style: TextStyle(color: color),
         ),
       ),
+    );
+  }
+}
+
+class _LikeButton extends StatefulWidget {
+  const _LikeButton({required this.isLiked, required this.onLike});
+
+  final bool isLiked;
+  final void Function() onLike;
+
+  @override
+  State<_LikeButton> createState() => __LikeButtonState();
+}
+
+class __LikeButtonState extends State<_LikeButton> {
+  bool _isLiked = false;
+
+  @override
+  void initState() {
+    _isLiked = widget.isLiked;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        widget.onLike();
+        setState(() {
+          _isLiked = !_isLiked;
+        });
+      },
+      icon: _isLiked
+          ? const Icon(
+              Icons.favorite_rounded,
+              color: AppColors.red,
+              size: 30,
+            )
+          : const Icon(
+              Icons.favorite_border_rounded,
+              color: AppColors.grey,
+              size: 30,
+            ),
     );
   }
 }
